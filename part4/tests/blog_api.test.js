@@ -51,6 +51,18 @@ test('Successfull creation of a new blog post', async () => {
   expect(titles).toContain('TestBlog');
 });
 
+test('verifying that if the likes property is missing from the request, it will default to the value 0', async () => {
+  const newBlog = {
+    title: 'TestBlog2',
+    author: 'test2',
+    url: 'www.test2.com'
+  };
+
+  const response = await api.post('/api/blogs').send(newBlog).expect(201);
+
+  expect(response.body.likes).toEqual(0);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
