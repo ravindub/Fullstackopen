@@ -63,6 +63,23 @@ test('verifying that if the likes property is missing from the request, it will 
   expect(response.body.likes).toEqual(0);
 });
 
+test('Verifying that if the title or url properties are missing from the request, the backend responds with the status code 400', async () => {
+  const blogWithoutTitle = {
+    author: 'test3',
+    url: 'www.test3.com',
+    likes: 3
+  };
+
+  const blogWithoutUrl = {
+    title: 'TestBlog3',
+    author: 'test3',
+    likes: 4
+  };
+
+  await api.post('/api/blogs').send(blogWithoutTitle).expect(400);
+  await api.post('/api/blogs').send(blogWithoutUrl).expect(400);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
