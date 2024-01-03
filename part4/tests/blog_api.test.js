@@ -98,6 +98,24 @@ describe('Deleting a blog', () => {
   });
 });
 
+describe('Updating a blog', () => {
+  test('Successfully updates a blog with valid id', async () => {
+    const startingBlogs = await helper.blogsInDb();
+    const blogToUpdate = startingBlogs[0];
+
+    const blogWithNewData = {
+      likes: 20
+    };
+
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogWithNewData)
+      .expect(200);
+
+    expect(updatedBlog.body.likes).toEqual(blogWithNewData.likes);
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
