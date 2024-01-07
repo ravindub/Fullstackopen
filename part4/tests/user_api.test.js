@@ -13,6 +13,7 @@ describe('when there is one user in the DB at the beginning', () => {
     const passwordHash = await bcrypt.hash('MyPassword', 10);
     const user = new User({
       username: 'root',
+      name: 'admin',
       passwordHash
     });
 
