@@ -82,9 +82,8 @@ const App = () => {
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+
+      <Blog blogs={blogs} setBlogs={setBlogs} />
     </div>
   );
 };
