@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({ blogs, setBlogs }) => {
+const Blog = (props) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -18,13 +18,24 @@ const Blog = ({ blogs, setBlogs }) => {
     try {
       const response = await blogService.create(newBlog);
 
-      setBlogs(blogs.concat(response));
+      props.setBlogs(props.blogs.concat(response));
+
+      props.setNotification(
+        `A new blog ${response.title} by ${response.author} added`
+      );
+
+      setTimeout(() => {
+        props.setNotification(null);
+      }, 3000);
 
       setTitle('');
       setAuthor('');
       setUrl('');
     } catch (error) {
-      console.log(error);
+      props.setError(error.response.data.error);
+      setTimeout(() => {
+        props.setError(null);
+      }, 3000);
     }
   };
 
@@ -71,7 +82,7 @@ const Blog = ({ blogs, setBlogs }) => {
         </form>
       </div>
       <div>
-        {blogs.map((blog) => (
+        {props.blogs.map((blog) => (
           <div key={blog.id}>
             {blog.title} {blog.author}
           </div>

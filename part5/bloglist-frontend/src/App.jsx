@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import Notification from './components/Notification';
+import Error from './components/Error';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassowrd] = useState('');
   const [user, setUser] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -36,7 +40,10 @@ const App = () => {
       setUsername('');
       setPassowrd('');
     } catch (exception) {
-      console.log(exception);
+      setError(exception.response.data.error);
+      setTimeout(() => {
+        setError(null);
+      }, 3000);
     }
   };
 
@@ -49,6 +56,9 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+
+        <Error message={error} />
+
         <form onSubmit={handleLogin}>
           <div>
             username:
@@ -78,12 +88,19 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Error message={error} />
+      <Notification message={notification} />
       <p>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
 
-      <Blog blogs={blogs} setBlogs={setBlogs} />
+      <Blog
+        blogs={blogs}
+        setBlogs={setBlogs}
+        setNotification={setNotification}
+        setError={setError}
+      />
     </div>
   );
 };
